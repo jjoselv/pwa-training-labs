@@ -50,7 +50,10 @@ limitations under the License.
   // Send custom analytics event
 
   const favorite = () => {
-    // TODO Send a custom event
+    gtag('event', 'favorite', {
+      'event_category': 'photos',
+      'event_label': 'cats'
+    });
   };
   const favoriteButton = document.getElementById('favorite');
   favoriteButton.addEventListener('click', favorite);
