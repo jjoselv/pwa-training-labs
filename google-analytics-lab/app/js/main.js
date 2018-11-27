@@ -70,14 +70,26 @@ limitations under the License.
           .then(subscription => {
             console.log('Subscribed to push,', subscription);
             // TODO Send subscribe event
+            gtag('event', 'subscribe', {
+              'event_category': 'push',
+              'event_label': 'cat updates'
+            });
           })
           .catch(error => {
             if (Notification.permission === 'denied') {
               console.warn('Subscribe failed, notifications are blocked');
               // Optional TODO - Send hits for subscribe error
+              gtag('event', 'subscribe-err', {
+                'event_category': 'push',
+                'event_label': 'cat updates'
+              });
             } else {
               console.error('Unable to subscribe to push', error);
               // Optional TODO - Send hits for subscribe error
+              gtag('event', 'subscribe-err', {
+                'event_category': 'push',
+                'event_label': 'cat updates'
+              });
             }
           });
         } else {
@@ -103,6 +115,10 @@ limitations under the License.
           .then(() => {
             console.log('Unsubscribed!');
             // TODO Send unsubscribe event
+            gtag('event', 'unsubscribe', {
+              'event_category': 'push',
+              'event_label': 'cat updates'
+            });
           });
         } else {
           console.log('Not currently subscribed');
@@ -112,6 +128,10 @@ limitations under the License.
     .catch(error => {
       console.warn('Error unsubscribing', error);
       // Optional TODO - Send hits for unsubscribe error
+      gtag('event', 'unsubscribe-err', {
+        'event_category': 'push',
+        'event_label': 'cat updates'
+      });
     });
   };
   const unsubscribeButton = document.getElementById('unsubscribe');
