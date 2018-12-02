@@ -31,6 +31,28 @@ const concat = require('gulp-concat');
 const browserSync = require('browser-sync').create();
 const fs = require('fs');
 const del = require('del');
+const workboxBuild = require('workbox-build');
+
+function serviceWorker() {
+  return workboxBuild.injectManifest({
+    swSrc: 'src/sw.js',
+    swDest: 'dist/sw.js',
+    globDirectory: 'dist',
+    globPatterns: [
+      'index.html',
+      'images/**/*.{svg,png,jpg}'
+    ]
+  }).then(({count, size, warnings}) => {
+    // Optionally, log any warnings and details.
+    warnings.forEach(console.warn);
+    console.log(`${count} files will be precached, totaling ${size} bytes.`);
+  }).catch(err => {
+    console.log('Uh oh 😬', err);
+  });
+};
+
+gulp.task('service-worker', serviceWorker);
+
 
 const paths = {
   styles: {
@@ -130,7 +152,7 @@ function watch() {
   gulp.watch('dist/index.html', browserSync.reload);
 }
 
-const dist = gulp.series(gulp.parallel(copy, styles, scripts), inline);
+const dist = gulp.series(gulp.parallel(copy, styles, scripts), inline, serviceWorker);
 const dev = gulp.series(dist, watch);
 
 gulp.task('dev', dev);
